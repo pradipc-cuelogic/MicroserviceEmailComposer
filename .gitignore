@@ -1,0 +1,6 @@
+dist
+*.iml
+node_modules
+*.env
+*.zip
+.idea
