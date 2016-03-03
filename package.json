@@ -2,7 +2,7 @@
   "name": "microserviceemailcomposer",
   "version": "1.0.0",
   "description": "Lambda function that triggers on update on the emailcomposer table",
-  "main": "EmailComposer.js",
+  "main": "MicroserviceEmailComposer.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
