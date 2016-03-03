@@ -14,7 +14,7 @@ handleEventType = function(EventType, record, next, callback) {
 
 handleEmailType = function(EmailType, record, next, callback) {
     if (EmailType == "newsletter" || EmailType == "testnewsletter") {
-        next(null, record, EmailType);
+        next(null, record);
     } else {
         console.log("no handling for " + EmailType + " type of trigger");
         callback();
@@ -23,6 +23,15 @@ handleEmailType = function(EmailType, record, next, callback) {
 
 handleGetUserName = function(user) {
    return (typeof user.firstName  === 'undefined') ? user.email : user.firstName
+}
+
+handleGetUserData = function(record, event, next) {
+    EmailType = getLambdaEventData.getEmailType(record, next);
+    if (EmailType == "newsletter") {
+        skip = getLambdaEventData.getSkipValue(record);
+        apiRequest.getUsersData(Local, skip, record, event, next);
+
+    }
 }
 
 handleSkipCall = function(EmailQueueObjects, skip, parent_next) {
@@ -63,18 +72,7 @@ handleConditionalRequestOnSkipValue = function(skip, EmailContentObjects, dynamo
     }
 }
 
-performSecurityCheck = function(dbRecord, record, callback, next) {
-    EmailType = getLambdaEventData.getEmailType(record, next);
-    if (EmailType === "newsletter") {
-        if (typeof dbRecord.count  !== "undefined" && dbRecord.count  == 1 &&  dbRecord.Items[0].ScheduledStatus === "triggered") {
-            next(null,record);
-        } else {
-            console.log("security check failed");
-            callback();
-        }
-    }
-    next(null, record);
-}
+
 
 module.exports = {
     handleEventType: handleEventType,
@@ -83,6 +81,6 @@ module.exports = {
     handleSkipCall: handleSkipCall,
     handleGetUserName: handleGetUserName,
     handleConditionalRequestOnSkipValue: handleConditionalRequestOnSkipValue,
-    performSecurityCheck: performSecurityCheck
+    handleGetUserData:handleGetUserData
 
 };

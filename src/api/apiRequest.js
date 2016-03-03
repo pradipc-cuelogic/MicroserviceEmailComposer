@@ -6,26 +6,11 @@ initApi = require('./initApi');
 apiResponseHandler = require('./apiResponseHandler');
 getLambdaEventData = require('./../getLambdaEventData');
 
-getUserData = function(local, UserId, record, event, parent_next) {
-    request({
-        uri: initApi.getAPIURL(local) + 'visitors/' + UserId + '?api_key=' + initApi.getAPIKey(),
-        method: 'get',
-        headers: { 'content-type': 'application/json' }
-    }, function(error, response, body) {
-        response = apiResponseHandler.handleGetUserDataResponse(error, body, event);
-        if (response.error)  {
-            parent_next(response.error);
-        } else {
-            parent_next(null, response, record);
-        }
-    });
-};
-
 getUsersData = function(local, skip, record, event, parent_next) {
     if (skip == null) {
-        skip = '/visitors/?filter[where][status]=Online&filter[where][weeklyNewsLetter]=Yes&filter[skip]=0&filter[limit]=100&api_key=' + initApi.getAPIKey();
+        skip = '/?page=1';
     }
-    var url = (typeof initApi.getAPIURL(local) === "undefined") ? '' : stripTrailingSlash(initApi.getAPIURL(local));
+    var url = (typeof initApi.getAPIURL() === "undefined") ? '' : stripTrailingSlash(initApi.getAPIURL());
     request({
         uri: url + skip,
         method: 'get',

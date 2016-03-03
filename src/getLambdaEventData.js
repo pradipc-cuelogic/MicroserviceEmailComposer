@@ -18,6 +18,16 @@ getEventName = function(record, next) {
         return EventType;
     }
 }
+
+getSkipValue = function(record) {
+    var skip = (record.dynamodb.NewImage.Skip) ? record.dynamodb.NewImage.Skip.S : '';
+    if ( typeof skip === 'undefined' || skip === '') {
+        return null;
+    } else {
+        return skip;
+    }
+}
+
 getEmailType = function(record, next) {
     var EmailType = (record.dynamodb.NewImage.EmailType.S) ? record.dynamodb.NewImage.EmailType.S : '';
     if ( typeof EmailType === 'undefined' || EmailType === '') {

@@ -49,6 +49,33 @@ putRecord = function(emailContentObject, next) {
     });
 }
 
+putBulkEmailContentRecord = function(emailContentObjects, skip, next) {
+    emailContentObject = emailContentObjects[0];
+    params = {};
+    params.TableName = "MicroserviceEmailComposer";
+    params.Item = {
+        "Timestamp": new Date().getTime(),
+        "EmailType": emailContentObject.EmailType,
+        "Skip":  skip,
+        "Email": {
+            "From":  emailContentObject.From,
+            "SenderName":  emailContentObject.SenderName,
+            "UserId": parseInt(emailContentObject.UserId),
+            "Content": emailContentObject.Content,
+            "Subject":emailContentObject.Subject
+        }
+    };
+    docClient.putItem(params, function(err, data) {
+        if (err) {
+            next(err);
+        } else {
+            next(null, emailContentObjects);
+        }
+    });
+
+}
+
+
 module.exports = {
     getRecords: getRecords,
     putRecord:putRecord
