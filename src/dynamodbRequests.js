@@ -28,7 +28,6 @@ getRecords = function(tableName, conditions, record, callback, next) {
 putRecord = function(emailContentObject, next) {
     params = {};
     params.TableName = "EmailQueue";
-
     params.Item = {
         "From":  emailContentObject.From,
         "SenderName":  emailContentObject.SenderName,
@@ -38,11 +37,10 @@ putRecord = function(emailContentObject, next) {
         "Content":  emailContentObject.Content,
         "UserId": parseInt(emailContentObject.UserId),
         "EmailType": emailContentObject.EmailType,
-        "Local": emailContentObject.Local,
-        "Timestamp": new Date().getTime(),
-        "Id": parseInt(emailContentObject.BulkEmailTimestamp),
-        "MergeVars":emailContentObject.MergeVars
+        "Timestamp": new Date().getTime()
+
     };
+    console.log(params.Item);
     docClient.putItem(params, function(err) {
         if (err) { next(err); }
         next(null, emailContentObject);
@@ -65,6 +63,7 @@ putBulkEmailContentRecord = function(emailContentObjects, skip, next) {
             "Subject":emailContentObject.Subject
         }
     };
+
     docClient.putItem(params, function(err, data) {
         if (err) {
             next(err);
@@ -78,5 +77,6 @@ putBulkEmailContentRecord = function(emailContentObjects, skip, next) {
 
 module.exports = {
     getRecords: getRecords,
-    putRecord:putRecord
+    putRecord:putRecord,
+    putBulkEmailContentRecord: putBulkEmailContentRecord
 };

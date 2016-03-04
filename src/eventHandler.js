@@ -2,6 +2,8 @@ var handleEventType, handleEmailType, getLambdaEventData, apiRequest, handleGetU
     encoding, handleConditionalRequestOnSkipValue, performSecurityCheck;
 
 getLambdaEventData = require('./getLambdaEventData');
+encoding = require('./encoding');
+apiRequest = require('./api/apiRequest');
 
 handleEventType = function(EventType, record, next, callback) {
     if (EventType == "INSERT") {
@@ -22,14 +24,14 @@ handleEmailType = function(EmailType, record, next, callback) {
 }
 
 handleGetUserName = function(user) {
-   return (typeof user.firstName  === 'undefined') ? user.email : user.firstName
+   return (typeof user.name  === 'undefined') ? user.email : user.name
 }
 
 handleGetUserData = function(record, event, next) {
     EmailType = getLambdaEventData.getEmailType(record, next);
     if (EmailType == "newsletter") {
         skip = getLambdaEventData.getSkipValue(record);
-        apiRequest.getUsersData(Local, skip, record, event, next);
+        apiRequest.getUsersData(skip, record, event, next);
 
     }
 }
@@ -51,11 +53,7 @@ getEmailQueueObject = function(record, user, next) {
         'Subject': getLambdaEventData.getSubject(record, next),
         "Content": getLambdaEventData.getContent(record, next),
         "EmailType": getLambdaEventData.getEmailType(record, next),
-        "UserId": parseInt(user.id),
-        "MergeVars": {
-            "loginLinkWithUnsubscribe": encoding.Base64.encode(user.email) + "/" + user.password,
-            "loginLink": encoding.Base64.encode(user.email) + "/" + user.password
-        }
+        "UserId": parseInt(user.id)
     }
 }
 
@@ -64,11 +62,8 @@ handleConditionalRequestOnSkipValue = function(skip, EmailContentObjects, dynamo
         dynamodbRequest.putBulkEmailContentRecord(EmailContentObjects, skip, next);
     } else {
         //when skip is null it has done with fetching usersData, give api call to update receipient count
-        if (EmailContentObjects[0].EmailType == "newsletter") {
-            apiRequest.updateNewsletterStatus( EmailContentObjects[0].Local, EmailContentObjects[0].ReferenceId, 3, EmailContentObjects, next);
-        } else {
-            next(null, EmailContentObjects);
-        }
+
+        next(null, EmailContentObjects);
     }
 }
 

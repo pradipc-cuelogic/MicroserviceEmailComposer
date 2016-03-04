@@ -27,13 +27,13 @@ handleGetUsersDataResponse = function(error, userData, event) {
         if (typeof userData.code !== 'undefined' &&  userData.code !== 200) {
             return { "error": "API Response returns " + userData.messages };
         }
-        if (userData === '' || typeof userData._embedded === 'undefined') {
+        if (userData === '' || typeof userData.data === 'undefined') {
             return { "error": "NO user found with the given data" };
         }
-        if (userData._links && typeof userData._links.next !== 'undefined') {
-            return { "visitor": userData._embedded.visitors , "skip": userData._links.next.href };
+        if (userData.next_page_url && typeof userData.next_page_url !== 'undefined') {
+            return { "visitor": userData.data , "skip": userData.next_page_url };
         }
-        return { "visitor": userData._embedded.visitors };
+        return { "visitor":userData.data };
     } catch(error) {
         return { "error": "API error" };
     }

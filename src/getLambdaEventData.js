@@ -80,5 +80,6 @@ module.exports = {
     getSubject:getSubject,
     getContent:getContent,
     getSenderEmail:getSenderEmail,
-    getSenderName:getSenderName
+    getSenderName:getSenderName,
+    getSkipValue:getSkipValue
 };

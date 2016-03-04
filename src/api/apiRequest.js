@@ -6,13 +6,14 @@ initApi = require('./initApi');
 apiResponseHandler = require('./apiResponseHandler');
 getLambdaEventData = require('./../getLambdaEventData');
 
-getUsersData = function(local, skip, record, event, parent_next) {
-    if (skip == null) {
-        skip = '/?page=1';
-    }
+getUsersData = function(skip, record, event, parent_next) {
     var url = (typeof initApi.getAPIURL() === "undefined") ? '' : stripTrailingSlash(initApi.getAPIURL());
+    if (skip == null) {
+        skip = url + '/?page=1';
+    }
+
     request({
-        uri: url + skip,
+        uri: skip,
         method: 'get',
         headers: { 'content-type': 'application/json' }
     }, function(error, response, body) {
@@ -25,23 +26,6 @@ getUsersData = function(local, skip, record, event, parent_next) {
     });
 };
 
-updateNewsletterStatus = function(local, referenceId, status, EmailContentObjects, parent_next) {
-    console.log(initApi.getAPIURL(local) + 'newslettercampaigns/' + referenceId + '?api_key=' + initApi.getAPIKey());
-    request({
-        uri: initApi.getAPIURL(local) + 'newslettercampaigns/' + referenceId + '?api_key=' + initApi.getAPIKey(),
-        method: 'PUT',
-        json: { 'scheduledStatus': status },
-        headers: { 'content-type': 'application/json' }
-    }, function(error, response, body) {
-        response = apiResponseHandler.handleUpdateNewsletterStatusResponse(error, body);
-        console.log(response);
-        if (response.error)  {
-            parent_next(response);
-        } else {
-            parent_next(null, EmailContentObjects);
-        }
-    });
-}
 
 stripTrailingSlash = function(str) {
     if (str.substr(-1) === '/') {
@@ -52,6 +36,5 @@ stripTrailingSlash = function(str) {
 
 module.exports = {
     getUsersData: getUsersData,
-    getUserData: getUserData,
-    updateNewsletterStatus: updateNewsletterStatus
+    getUserData: getUserData
 };
