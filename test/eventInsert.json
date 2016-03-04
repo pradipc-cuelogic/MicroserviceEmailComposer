@@ -1,1 +1,46 @@
-{ "Records": [ { "eventID": "a30cfa44e862631ec4d37663a0d00dc5", "eventName": "INSERT", "eventVersion": "1.0", "eventSource": "aws:dynamodb", "awsRegion": "us-west-2", "dynamodb": { "Keys": { "Timestamp": { "N": "1456987041" } }, "NewImage": { "Email": { "M": { "SenderName": { "S": "ashwini" }, "Content": { "S": "test mail" }, "From": { "S": "ashwini@test.com" }, "Subject": { "S": "newsletter" } } }, "EmailType": { "S": "newsletter" }, "Timestamp": { "N": "1456987041" } }, "SequenceNumber": "1500000000002420057717", "SizeBytes": 131, "StreamViewType": "NEW_AND_OLD_IMAGES" }, "eventSourceARN": "arn:aws:dynamodb:us-west-2:178016055162:table/MicroserviceEmailComposer/stream/2016-03-03T05:42:09.518" } ] }
+{
+    "Records":[
+        {
+            "eventID":"a30cfa44e862631ec4d37663a0d00dc5",
+            "eventName":"INSERT",
+            "eventVersion":"1.0",
+            "eventSource":"aws:dynamodb",
+            "awsRegion":"us-west-2",
+            "dynamodb":{
+                "Keys":{
+                    "Timestamp":{
+                        "N":"1456987041"
+                    }
+                },
+                "NewImage":{
+                    "Email":{
+                        "M":{
+                            "SenderName":{
+                                "S":"ashwini"
+                            },
+                            "Content":{
+                                "S":"test mail"
+                            },
+                            "From":{
+                                "S":"ashwini@test.com"
+                            },
+                            "Subject":{
+                                "S":"newsletter"
+                            }
+                        }
+                    },
+                    "EmailType":{
+                        "S":"newsletter"
+                    },
+                    "Timestamp":{
+                        "N":"1456987041"
+                    }
+                },
+                "SequenceNumber":"1500000000002420057717",
+                "SizeBytes":131,
+                "StreamViewType":"NEW_AND_OLD_IMAGES"
+            },
+            "eventSourceARN":"arn:aws:dynamodb:us-west-2:178016055162:table/MicroserviceEmailComposer/stream/2016-03-03T05:42:09.518"
+        }
+    ]
+}

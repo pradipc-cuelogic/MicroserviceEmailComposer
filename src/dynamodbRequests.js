@@ -40,7 +40,6 @@ putRecord = function(emailContentObject, next) {
         "Timestamp": new Date().getTime()
 
     };
-    console.log(params.Item);
     docClient.putItem(params, function(err) {
         if (err) { next(err); }
         next(null, emailContentObject);
